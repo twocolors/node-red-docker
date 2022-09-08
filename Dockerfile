@@ -22,6 +22,7 @@ RUN set -ex \
       python3 \
       python3-dev \
       tzdata \
+      iputils-ping \
   # Add user like pi (1000)
   && deluser --remove-home node \
   && useradd --home-dir /usr/src/node-red --uid 1000 node-red \
