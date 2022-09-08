@@ -14,7 +14,7 @@ jobs:
       matrix:
         node: [ 14, 16, 18 ]
         os_arch: [ amd64, arm32v6, arm32v7, arm64v8 ]
-        os_name: bullseye-slim
+        os_name: [ "bullseye-slim" ]
 
     steps:
       - name: 1-checkout
