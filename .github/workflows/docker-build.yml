@@ -1,0 +1,43 @@
+name: Create Docker Images
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node: [ 14, 16, 18 ]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: setup-qemu-action
+        uses: docker/setup-qemu-action@v1
+      - name: login-action
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: setup-buildx-action
+        uses: docker/setup-buildx-action@v1
+      - name: build-push-action
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          platforms: linux/amd64, linux/arm64, linux/arm/v7, linux/arm/v6
+          push: true
+          build-args: |
+            OS_NAME=bullseye-slim
+            NODE_VERSION=${{ matrix.node }}
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ matrix.node }}
