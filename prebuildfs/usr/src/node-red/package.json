@@ -1,0 +1,26 @@
+{
+  "name": "@twocolors/node-red-docker",
+  "version": "3.0.2",
+  "description": "Low-code programming for event-driven applications",
+  "homepage": "https://github.com/twocolors/node-red-docker",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twocolors/node-red-docker.git"
+  },
+  "main": "node_modules/node-red/red/red.js",
+  "scripts": {
+    "start": "node $NODE_OPTIONS node_modules/node-red/red.js $FLOWS"
+  },
+  "contributors": [
+    {
+      "name": "D"
+    }
+  ],
+  "dependencies": {
+    "node-red": "3.0.2"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
