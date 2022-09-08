@@ -1,8 +1,9 @@
+ARG OS_ARCH
 ARG OS_NAME
 ARG NODE_VERSION
 
 ### base ###
-FROM node:${NODE_VERSION}-${OS_NAME} AS base
+FROM ${OS_ARCH}/node:${NODE_VERSION}-${OS_NAME} AS base
 
 # Copy FS
 COPY prebuildfs /
@@ -11,7 +12,7 @@ ARG TARGETPLATFORM
 
 # Install required system packages and dependencies
 RUN set -ex \
-  && install_packages \
+  && /opt/docker/bin/install_packages \
       build-essential \
       ca-certificates \
       curl \
@@ -28,7 +29,7 @@ RUN set -ex \
   && chown -R node-red:root /data && chmod -R g+rwX /data \
   && chown -R node-red:root /usr/src/node-red && chmod -R g+rwX /usr/src/node-red \
   # Add known_hosts
-  && known_hosts /etc/ssh/ssh_known_hosts \
+  && /opt/docker/bin/known_hosts /etc/ssh/ssh_known_hosts \
   && echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config \
   # ffmpeg-for-homebridge
   && case "$TARGETPLATFORM" in \
@@ -49,7 +50,7 @@ FROM base AS build
 RUN set -ex \
   && npm install --unsafe-perm --no-update-notifier --no-fund --only=production \
   && npm uninstall node-red-node-gpio \
-  && remove_native_gpio \
+  && /opt/docker/bin/remove_native_gpio \
   && cp -R node_modules prod_node_modules
 
 ### release ###
@@ -59,12 +60,14 @@ COPY --from=build /usr/src/node-red/prod_node_modules ./node_modules
 
 RUN set -ex \
   && chown -R node-red:root /usr/src/node-red \
-  && npm config set cache /data/.npm --global
+  && npm config set cache /data/.npm --global \
+  # support port 80
+  && setcap 'cap_net_bind_service=+ep' `which node`
 
 USER node-red
 
 ENV NODE_PATH=/usr/src/node-red/node_modules:/data/node_modules \
-  PATH=/usr/src/node-red/node_modules/.bin:${PATH} \
+  PATH=/opt/docker/bin:/usr/src/node-red/node_modules/.bin:${PATH} \
   FLOWS=flows.json
 
 EXPOSE 1880

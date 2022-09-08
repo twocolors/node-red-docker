@@ -13,13 +13,15 @@ jobs:
     strategy:
       matrix:
         node: [ 14, 16, 18 ]
+        os_arch: [ amd64, arm32v6, arm32v7, arm64v8 ]
+        os_name: bullseye-slim
 
     steps:
-      - name: checkout
+      - name: 1-checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: setup-qemu-action
+      - name: 2-setup-qemu-action
         uses: docker/setup-qemu-action@v1
       - name: login-action
         uses: docker/login-action@v1
@@ -27,18 +29,34 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: setup-buildx-action
+      - name: 3-setup-buildx-action
         uses: docker/setup-buildx-action@v1
-      - name: build-push-action
+      - name: 4-image
+        id: image
+        run: |
+          PLATFORMS=""
+          if [ "${{ matrix.os_arch }}" == "amd64" ]; then
+            PLATFORMS="linux/amd64"
+          elif [ "${{ matrix.os_arch }}" == "arm32v6" ]; then
+            PLATFORMS="linux/arm/v6"
+          elif [ "${{ matrix.os_arch }}" == "arm32v7" ]; then
+            PLATFORMS="linux/arm/v7"
+          elif [ "${{ matrix.os_arch }}" == "arm64v8" ]; then
+            PLATFORMS="linux/arm64"
+          fi
+
+          echo "::set-output name=platforms::$PLATFORMS"
+      - name: 5-build-push-action
         uses: docker/build-push-action@v2
         continue-on-error: true
         with:
           context: ./
           file: ./Dockerfile
-          platforms: linux/amd64, linux/arm64, linux/arm/v7
+          platforms: ${{ steps.image.outputs.platforms }}
           push: true
           build-args: |
-            OS_NAME=bullseye-slim
+            OS_ARCH=${{ matrix.os_arch }}
+            OS_NAME=${{ matrix.os_name }}
             NODE_VERSION=${{ matrix.node }}
           tags: |
             ghcr.io/${{ github.repository }}:${{ matrix.node }}
