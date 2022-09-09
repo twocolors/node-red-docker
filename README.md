@@ -4,7 +4,7 @@ This project from origanl [Node-RED Docker](https://github.com/node-red/node-red
 
 This projects i make for support [node-red-contrib-tfjs-coco-ssd](https://flows.nodered.org/node/node-red-contrib-tfjs-coco-ssd) more [Issues](https://github.com/dceejay/tfjs-coco-ssd/issues/2) on Raspberry Pi 4
 
-Note: Support arch `amd64`, `arm32v7`, `arm64v8` , node `14`, `16`, `18`
+**Note**: Support ARCH `amd64`, `arm32v7`, `arm64v8` and Node.js `14`, `16`, `18`
 
 ### Install
 
