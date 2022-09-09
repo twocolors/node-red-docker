@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node: [ 14, 16, 18 ]
-        os_arch: [ amd64, arm32v6, arm32v7, arm64v8 ]
         os_name: [ "bullseye-slim" ]
 
     steps:
@@ -31,31 +30,15 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: 4-setup-buildx-action
         uses: docker/setup-buildx-action@v1
-      - name: 5-image-arch
-        id: image
-        run: |
-          PLATFORMS=""
-          if [ "${{ matrix.os_arch }}" == "amd64" ]; then
-            PLATFORMS="linux/amd64"
-          elif [ "${{ matrix.os_arch }}" == "arm32v6" ]; then
-            PLATFORMS="linux/arm/v6"
-          elif [ "${{ matrix.os_arch }}" == "arm32v7" ]; then
-            PLATFORMS="linux/arm/v7"
-          elif [ "${{ matrix.os_arch }}" == "arm64v8" ]; then
-            PLATFORMS="linux/arm64"
-          fi
-
-          echo "::set-output name=platforms::$PLATFORMS"
-      - name: 6-build-push-action
+      - name: 5-build-push-action
         uses: docker/build-push-action@v2
         continue-on-error: true
         with:
           context: ./
           file: ./Dockerfile
-          platforms: ${{ steps.image.outputs.platforms }}
+          platforms: "linux/amd64, linux/arm/v7, linux/arm64"
           push: true
           build-args: |
-            OS_ARCH=${{ matrix.os_arch }}
             OS_NAME=${{ matrix.os_name }}
             NODE_VERSION=${{ matrix.node }}
           tags: |

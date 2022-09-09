@@ -1,14 +1,13 @@
-ARG OS_ARCH
 ARG OS_NAME
 ARG NODE_VERSION
 
 ### base ###
-FROM ${OS_ARCH}/node:${NODE_VERSION}-${OS_NAME} AS base
+FROM node:${NODE_VERSION}-${OS_NAME} AS base
 
 # Copy FS
 COPY prebuildfs /
 
-ARG OS_ARCH
+ARG TARGETPLATFORM
 
 # Install required system packages and dependencies
 RUN set -ex \
@@ -32,11 +31,11 @@ RUN set -ex \
   && /opt/docker/bin/known_hosts /etc/ssh/ssh_known_hosts \
   && echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config \
   # ffmpeg-for-homebridge
-  && case "$OS_ARCH" in \
-    amd64) FFMPEG='debian-x86_64';; \
-    arm32v6) FFMPEG='raspbian-armv6l';; \
-    arm32v7) FFMPEG='debian-armv7l';; \
-    arm64v8) FFMPEG='debian-aarch64';; \
+  && case "$TARGETPLATFORM" in \
+    linux\/amd64) FFMPEG='debian-x86_64';; \
+    linux\/arm/v6) FFMPEG='raspbian-armv6l';; \
+    linux\/arm/v7) FFMPEG='debian-armv7l';; \
+    linux\/arm64) FFMPEG='debian-aarch64';; \
     *) echo "unsupported architecture"; exit 1 ;; \
     esac \
   && curl -Lfs https://github.com/oznu/ffmpeg-for-homebridge/releases/latest/download/ffmpeg-${FFMPEG}.tar.gz | tar xzf - -C / --no-same-owner
