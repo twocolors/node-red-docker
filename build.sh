@@ -9,7 +9,7 @@ echo "#########################################################################"
 
 docker build --rm --no-cache \
   --build-arg TARGETPLATFORM="linux/amd64" \
-  --build-arg OS_NAME=bullseye-slim \
+  --build-arg OS_NAME=slim \
   --build-arg NODE_VERSION=16 \
   --file Dockerfile \
   --tag twocolors:node-red .
