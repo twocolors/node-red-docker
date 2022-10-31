@@ -60,6 +60,7 @@ COPY --from=build /usr/src/node-red/prod_node_modules ./node_modules
 RUN set -ex \
   && chown -R node-red:root /usr/src/node-red \
   && npm config set cache /data/.npm --global \
+  && npm config set python `which python3` --global \
   # support port 80
   && setcap 'cap_net_bind_service=+ep' `which node`
 

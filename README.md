@@ -17,3 +17,9 @@ docker pull ghcr.io/twocolors/node-red-docker
 ```bash
 docker run -it --net=host -v <path_on_host>:/data --name=node-red ghcr.io/twocolors/node-red-docker
 ```
+
+### Tags
+
+`14`, `16`, `18`
+
+**latest** is Node.js `16`

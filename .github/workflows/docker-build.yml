@@ -29,7 +29,7 @@ jobs:
           if [ "${{ matrix.node }}" == "${{ env.LATEST_NODE }}" ]; then
             TAGS="$TAGS,ghcr.io/${{ github.repository }}:latest"
           fi
-          echo "::set-output name=tags::$TAGS"
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
       - name: 3-setup-qemu-action
         uses: docker/setup-qemu-action@v1
       - name: 4-login-action
@@ -52,4 +52,4 @@ jobs:
             OS_NAME=${{ matrix.os_name }}
             NODE_VERSION=${{ matrix.node }}
           tags: |
-            ${{ steps.setting.outputs.tags }}
+            ${{ env.TAGS }}
