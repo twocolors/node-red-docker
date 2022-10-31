@@ -32,9 +32,6 @@ RUN set -ex \
   && useradd --home-dir /usr/src/node-red --uid 1000 node-red \
   && chown -R node-red:root /data && chmod -R g+rwX /data \
   && chown -R node-red:root /usr/src/node-red && chmod -R g+rwX /usr/src/node-red \
-  # Add known_hosts
-  && /opt/docker/bin/known_hosts /etc/ssh/ssh_known_hosts \
-  && echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config \
   # ffmpeg-for-homebridge
   && case "$TARGETPLATFORM" in \
     linux\/amd64) FFMPEG='debian-x86_64';; \
@@ -43,7 +40,10 @@ RUN set -ex \
     linux\/arm64) FFMPEG='debian-aarch64';; \
     *) echo "unsupported architecture"; exit 1 ;; \
     esac \
-  && /usr/bin/curl -Lfs https://github.com/oznu/ffmpeg-for-homebridge/releases/latest/download/ffmpeg-${FFMPEG}.tar.gz | /bin/tar xzf - -C / --no-same-owner
+  && /usr/bin/curl -Lfs https://github.com/oznu/ffmpeg-for-homebridge/releases/latest/download/ffmpeg-${FFMPEG}.tar.gz | /bin/tar xzf - -C / --no-same-owner \
+  # Add known_hosts
+  && /opt/docker/bin/known_hosts /etc/ssh/ssh_known_hosts \
+  && echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config
 
 # Set work directory
 WORKDIR /usr/src/node-red
