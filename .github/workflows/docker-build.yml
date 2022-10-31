@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         node: [ 14, 16, 18 ]
-        os_name: [ "slim" ]
+        os_name: [ "buster-slim" ]
 
     steps:
       - name: 1-checkout
