@@ -43,7 +43,7 @@ RUN set -ex \
     linux\/arm64) FFMPEG='debian-aarch64';; \
     *) echo "unsupported architecture"; exit 1 ;; \
     esac \
-  && curl -Lfs --connect-timeout 90 --retry 10 --retry-delay 1 https://github.com/oznu/ffmpeg-for-homebridge/releases/latest/download/ffmpeg-${FFMPEG}.tar.gz | tar xzf - -C / --no-same-owner
+  && curl -Lfs --connect-timeout 30 --retry 10 --retry-delay 1 --max-time 600 https://github.com/oznu/ffmpeg-for-homebridge/releases/latest/download/ffmpeg-${FFMPEG}.tar.gz | tar xzf - -C / --no-same-owner
 
 # Set work directory
 WORKDIR /usr/src/node-red
