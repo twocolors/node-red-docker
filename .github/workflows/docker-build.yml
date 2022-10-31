@@ -29,6 +29,9 @@ jobs:
           if [ "${{ matrix.node }}" == "${{ env.LATEST_NODE }}" ]; then
             TAGS="$TAGS,ghcr.io/${{ github.repository }}:latest"
           fi
+
+          echo $TAGS
+
           echo "TAGS=$TAGS" >> $GITHUB_ENV
       - name: 3-setup-qemu-action
         uses: docker/setup-qemu-action@v1
