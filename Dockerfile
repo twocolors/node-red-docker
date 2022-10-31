@@ -22,6 +22,7 @@ RUN set -ex \
       python3-dev \
       tzdata \
       iputils-ping \
+      libcap2-bin \
   # Add user like pi (1000)
   && deluser --remove-home node \
   && useradd --home-dir /usr/src/node-red --uid 1000 node-red \

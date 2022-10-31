@@ -30,7 +30,7 @@ jobs:
             TAGS="$TAGS,ghcr.io/${{ github.repository }}:latest"
           fi
 
-          echo ":rocket: TAGS: $TAGS"
+          echo "current tags $TAGS"
 
           echo "TAGS=$TAGS" >> $GITHUB_ENV
       - name: 3-setup-qemu-action
