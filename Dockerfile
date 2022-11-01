@@ -28,10 +28,8 @@ RUN set -ex \
       zip \
       wget \
   # Add user like pi (1000)
-  && TESTUID=`id -un 1000` \
-  && if [ ! -z $TESTUID ]; then \
-    deluser --remove-home $TESTUID; \
-  fi \
+  && testUID="$(cat /etc/passwd | grep 1000 | awk -F':' '{print $1}')" \
+  && { [ -z "$testUID" ] || deluser --remove-home $testUID; } \
   && useradd --home-dir /usr/src/node-red --uid 1000 node-red \
   && chown -R node-red:root /data && chmod -R g+rwX /data \
   && chown -R node-red:root /usr/src/node-red && chmod -R g+rwX /usr/src/node-red \
