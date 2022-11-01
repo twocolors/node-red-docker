@@ -15,7 +15,10 @@ jobs:
     strategy:
       matrix:
         node: [ 14, 16, 18 ]
-        os_name: [ "slim" ]
+        suffix: [ "", "raspberry" ]
+        exclude:
+          - node: 18
+            suffix: raspberry
 
     steps:
       - name: 1-checkout
@@ -25,14 +28,35 @@ jobs:
       - name: 2-setup-image-setting
         id: setting
         run: |
-          TAGS="ghcr.io/${{ github.repository }}:${{ matrix.node }}"
+          SUFFIX=""
+          if [ "${{ matrix.suffix }}" != "" ]; then
+            SUFFIX="-${{ matrix.suffix}}"
+          fi
+
+          TAGS="ghcr.io/${{ github.repository }}:${{ matrix.node }}$SUFFIX"
           if [ "${{ matrix.node }}" == "${{ env.LATEST_NODE }}" ]; then
-            TAGS="$TAGS,ghcr.io/${{ github.repository }}:latest"
+            TAGS="$TAGS,ghcr.io/${{ github.repository }}:latest$SUFFIX"
           fi
 
           echo "current tags $TAGS"
-
           echo "TAGS=$TAGS" >> $GITHUB_ENV
+
+          OS_NAME=""
+          PLATFORMS=""
+          if [ "${{ matrix.suffix }}" == "" ]; then
+            OS_NAME="node:${{ matrix.node }}-bullseye-slim"
+            PLATFORMS="linux/amd64, linux/arm64, linux/arm/v7"
+          elif [ "${{ matrix.suffix}}" == "raspberry" ]; then
+            OS_NAME="balenalib/raspberry-pi-node:${{ matrix.node }}-bullseye"
+            PLATFORMS="linux/arm/v6"
+          fi
+
+          echo "current OS $OS_NAME"
+          echo "OS_NAME=$OS_NAME" >> $GITHUB_ENV
+
+          echo "current platforms $PLATFORMS"
+          echo "PLATFORMS=$PLATFORMS" >> $GITHUB_ENV
+
       - name: 3-setup-qemu-action
         uses: docker/setup-qemu-action@v2
       - name: 4-login-action
@@ -49,10 +73,9 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile
-          platforms: "linux/amd64, linux/arm/v7, linux/arm64"
+          platforms: ${{ env.PLATFORMS }}
           push: true
           build-args: |
-            OS_NAME=${{ matrix.os_name }}
-            NODE_VERSION=${{ matrix.node }}
+            OS_NAME=${{ env.OS_NAME }}
           tags: |
             ${{ env.TAGS }}

@@ -1,8 +1,7 @@
 ARG OS_NAME
-ARG NODE_VERSION
 
 ### base ###
-FROM node:${NODE_VERSION}-${OS_NAME} AS base
+FROM ${OS_NAME} AS base
 
 # Copy FS
 COPY prebuildfs /

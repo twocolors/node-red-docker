@@ -5,11 +5,12 @@ echo "#########################################################################"
 echo "node-red version: ${NODE_RED_VERSION}"
 echo "#########################################################################"
 
-# linux/amd64, linux/arm/v7, linux/arm64
+# linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64
+# --build-arg TARGETPLATFORM="linux/amd64"
+# --build-arg OS_NAME="node:16-bullseye-slim"
 
 docker build --rm --no-cache \
-  --build-arg TARGETPLATFORM="linux/amd64" \
-  --build-arg OS_NAME=slim \
-  --build-arg NODE_VERSION=16 \
+  --build-arg TARGETPLATFORM="linux/arm/v6" \
+  --build-arg OS_NAME="balenalib/raspberry-pi-node:16-bullseye" \
   --file Dockerfile \
   --tag twocolors:node-red .
