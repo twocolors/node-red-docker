@@ -19,6 +19,7 @@ RUN set -ex \
       openssl \
       python3 \
       python3-dev \
+      python3-pip \
       tzdata \
       iputils-ping \
       libcap2-bin \
