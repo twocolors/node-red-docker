@@ -28,6 +28,7 @@ RUN set -ex \
       unzip \
       zip \
       wget \
+      ffmpeg \
   # Add user like pi (1000)
   && testUID="$(cat /etc/passwd | grep 1000 | awk -F':' '{print $1}')" \
   && { [ -z "$testUID" ] || deluser --remove-home $testUID; } \
@@ -36,16 +37,17 @@ RUN set -ex \
   && chown -R node-red:root /usr/src/node-red && chmod -R g+rwX /usr/src/node-red \
   # Add known_hosts
   && /opt/docker/bin/known_hosts /etc/ssh/ssh_known_hosts \
-  && echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config \
+  && echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config
+  # \
   # ffmpeg-for-homebridge
-  && case "$TARGETPLATFORM" in \
-    linux\/amd64) FFMPEG='debian-x86_64';; \
-    linux\/arm/v6) FFMPEG='raspbian-armv6l';; \
-    linux\/arm/v7) FFMPEG='debian-armv7l';; \
-    linux\/arm64) FFMPEG='debian-aarch64';; \
-    *) echo "unsupported architecture"; exit 1 ;; \
-    esac \
-  && wget -c https://github.com/oznu/ffmpeg-for-homebridge/releases/latest/download/ffmpeg-${FFMPEG}.tar.gz -O - | tar xzf - -C / --no-same-owner
+  # && case "$TARGETPLATFORM" in \
+  #   linux\/amd64) FFMPEG='debian-x86_64';; \
+  #   linux\/arm/v6) FFMPEG='raspbian-armv6l';; \
+  #   linux\/arm/v7) FFMPEG='debian-armv7l';; \
+  #   linux\/arm64) FFMPEG='debian-aarch64';; \
+  #   *) echo "unsupported architecture"; exit 1 ;; \
+  #   esac \
+  # && wget -c https://github.com/oznu/ffmpeg-for-homebridge/releases/latest/download/ffmpeg-${FFMPEG}.tar.gz -O - | tar xzf - -C / --no-same-owner
 
 # Set work directory
 WORKDIR /usr/src/node-red
@@ -67,7 +69,7 @@ COPY --from=build /usr/src/node-red/prod_node_modules ./node_modules
 RUN set -ex \
   && chown -R node-red:root /usr/src/node-red \
   && npm config set cache /data/.npm --global \
-  && npm config set python `which python3` --global \
+  # && npm config set python `which python3` --global \
   # support port 80
   && setcap 'cap_net_bind_service=+ep' `which node`
 
