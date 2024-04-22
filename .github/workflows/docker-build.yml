@@ -7,16 +7,13 @@ on:
 jobs:
   build:
     env:
-      LATEST_NODE: 16
+      LATEST_NODE: 18
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node: [ 14, 16, 18 ]
-        suffix: [ "", "raspberry" ]
-        exclude:
-          - node: 18
-            suffix: raspberry
+        node: [ 16, 18, 20 ]
+        suffix: [ "" ]
 
     steps:
       - name: 1-checkout
@@ -42,11 +39,8 @@ jobs:
           OS_NAME=""
           PLATFORMS=""
           if [ "${{ matrix.suffix }}" == "" ]; then
-            OS_NAME="node:${{ matrix.node }}-bullseye-slim"
+            OS_NAME="node:${{ matrix.node }}-bookworm-slim"
             PLATFORMS="linux/amd64, linux/arm64, linux/arm/v7"
-          elif [ "${{ matrix.suffix}}" == "raspberry" ]; then
-            OS_NAME="balenalib/raspberry-pi-node:${{ matrix.node }}-bullseye"
-            PLATFORMS="linux/arm/v6"
           fi
 
           echo "current OS $OS_NAME"
