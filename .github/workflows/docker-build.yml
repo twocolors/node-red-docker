@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node: [ 16, 18, 20 ]
-        suffix: [ "" ]
 
     steps:
       - name: 1-checkout
@@ -23,25 +22,16 @@ jobs:
       - name: 2-setup-image-setting
         id: setting
         run: |
-          SUFFIX=""
-          if [ "${{ matrix.suffix }}" != "" ]; then
-            SUFFIX="-${{ matrix.suffix}}"
-          fi
-
-          TAGS="ghcr.io/${{ github.repository }}:${{ matrix.node }}$SUFFIX"
+          TAGS="ghcr.io/${{ github.repository }}:${{ matrix.node }}"
           if [ "${{ matrix.node }}" == "${{ env.LATEST_NODE }}" ]; then
-            TAGS="$TAGS,ghcr.io/${{ github.repository }}:latest$SUFFIX"
+            TAGS="$TAGS,ghcr.io/${{ github.repository }}:latest"
           fi
 
           echo "current tags $TAGS"
           echo "TAGS=$TAGS" >> $GITHUB_ENV
 
-          OS_NAME=""
-          PLATFORMS=""
-          if [ "${{ matrix.suffix }}" == "" ]; then
-            OS_NAME="node:${{ matrix.node }}-bookworm-slim"
-            PLATFORMS="linux/amd64, linux/arm64, linux/arm/v7"
-          fi
+          OS_NAME="node:${{ matrix.node }}-bookworm-slim"
+          PLATFORMS="linux/amd64, linux/arm64, linux/arm/v7"
 
           echo "current OS $OS_NAME"
           echo "OS_NAME=$OS_NAME" >> $GITHUB_ENV

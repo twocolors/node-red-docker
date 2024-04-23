@@ -1,6 +1,6 @@
 {
   "name": "@twocolors/node-red-docker",
-  "version": "3.0.2",
+  "version": "3.1.9",
   "description": "Low-code programming for event-driven applications",
   "homepage": "https://github.com/twocolors/node-red-docker",
   "license": "MIT",
@@ -10,7 +10,9 @@
   },
   "main": "node_modules/node-red/red.js",
   "scripts": {
-    "start": "node $NODE_OPTIONS node_modules/node-red/red.js $FLOWS"
+    "start": "node $NODE_OPTIONS node_modules/node-red/red.js $FLOWS",
+    "debug": "node --inspect=0.0.0.0:9229 $NODE_OPTIONS node_modules/node-red/red.js $FLOWS",
+    "debug_brk": "node --inspect=0.0.0.0:9229 --inspect-brk $NODE_OPTIONS node_modules/node-red/red.js $FLOWS"
   },
   "contributors": [
     {
@@ -21,6 +23,6 @@
     "node-red": "3.1.9"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   }
 }
