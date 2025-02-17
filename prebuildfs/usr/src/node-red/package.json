@@ -20,7 +20,7 @@
     }
   ],
   "dependencies": {
-    "node-red": "4.0.8"
+    "node-red": "4.0.9"
   },
   "engines": {
     "node": ">=16"
