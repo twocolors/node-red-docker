@@ -1,1 +1,28 @@
-prebuildfs/usr/src/node-red/package.json
+{
+  "name": "@twocolors/node-red-docker",
+  "version": "3.1.9",
+  "description": "Low-code programming for event-driven applications",
+  "homepage": "https://github.com/twocolors/node-red-docker",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twocolors/node-red-docker.git"
+  },
+  "main": "node_modules/node-red/red.js",
+  "scripts": {
+    "start": "node $NODE_OPTIONS node_modules/node-red/red.js $FLOWS",
+    "debug": "node --inspect=0.0.0.0:9229 $NODE_OPTIONS node_modules/node-red/red.js $FLOWS",
+    "debug_brk": "node --inspect=0.0.0.0:9229 --inspect-brk $NODE_OPTIONS node_modules/node-red/red.js $FLOWS"
+  },
+  "contributors": [
+    {
+      "name": "D"
+    }
+  ],
+  "dependencies": {
+    "node-red": "4.1.0"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
