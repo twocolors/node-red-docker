@@ -42,7 +42,7 @@ jobs:
       - name: 3-setup-qemu-action
         uses: docker/setup-qemu-action@v4
       - name: 4-login-action
-        uses: docker/login-action@v2
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
