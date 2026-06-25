@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: 1-checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: 2-setup-image-setting
