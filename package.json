@@ -1,6 +1,6 @@
 {
   "name": "@twocolors/node-red-docker",
-  "version": "4.1.7",
+  "version": "5.0.0",
   "description": "Low-code programming for event-driven applications",
   "homepage": "https://github.com/twocolors/node-red-docker",
   "license": "MIT",
@@ -23,6 +23,6 @@
     "node-red": "5.0.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.9"
   }
 }
