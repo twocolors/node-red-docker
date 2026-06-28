@@ -7,12 +7,12 @@ on:
 jobs:
   build:
     env:
-      LATEST_NODE: 20
+      LATEST_NODE: 22
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node: [ 18, 20, 22 ]
+        node: [ 22, 24, 26 ]
 
     steps:
       - name: 1-checkout
@@ -30,8 +30,8 @@ jobs:
           echo "current tags $TAGS"
           echo "TAGS=$TAGS" >> $GITHUB_ENV
 
-          OS_NAME="node:${{ matrix.node }}-bookworm-slim"
-          PLATFORMS="linux/amd64, linux/arm64, linux/arm/v7"
+          OS_NAME="node:${{ matrix.node }}-slim"
+          PLATFORMS="linux/amd64, linux/arm64"
 
           echo "current OS $OS_NAME"
           echo "OS_NAME=$OS_NAME" >> $GITHUB_ENV
